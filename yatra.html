@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <title>Yatra Gen - Itinerary Management System</title>
+    <link rel="stylesheet" href="yatra.css"/>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <a href="#" class="brand" onclick="switchView('generate')">
+                <span class="brand-mark">YG</span>
+                <span>Yatra Gen</span>
+            </a>
+            <nav class="nav-links">
+                <a href="javascript:void(0)" id="nav-gen"
+                    class="active"
+                    onclick="switchView('generate')">Plan Itinerary</a>
+                <a href="javascript:void(0)" id="nav-trips"
+                    onclick="switchView('history')">Trip Records</a>
+            </nav>
+            <div class="user-status" id="authSection"></div>
+           
+        </div>
+    </header>
+    <main>
+        <section id="view-generate" class="view-section active">
+            <div class="page-header">
+                <h1 class="page-title">Generate Itinerary</h1>
+                <p class="page-subtitle">
+                    Personalized daily itineraries for any city, state, or country on Earth.
+                </p>
+            </div>
+            <div class="card">
+                <form id="generatorForm" onsubmit="handleGenerate(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="destination">Destination</label>
+                            <input type="text" id="destination"
+                                placeholder="e.g. Agartala, Tokyo, Iceland" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="duration">Duration(Days)</label>
+                            <select id="duration"required>
+                                <option value="1">1 Day</option>
+                                <option value="2">2 Days</option>
+                                <option value="3">3 Days</option>
+                                <option value="4">4 Days</option>
+                                <option value="5">5 Days</option>
+                                <option value="7">7 Days</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="budget">Budget Level</label>
+                            <select id="budget" required>
+                                <option value="Economy">Economy</option>
+                                <option value="Standard" selected>Standard</option>
+                                <option value="Premium">Premium</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pace">Travel Pace</label>
+                            <select id="pace" required>
+                                <option value="Relaxed">Relaxed Pace</option>
+                                <option value="Moderate" selected>Moderate Pace</option>
+                                <option value="Fast">Comprehensive Pace</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Generate Schedule</button>
+                    </div>
+                </form>
+            </div>
+            <div id="resultsWrapper" style="display: none;">
+                <div class="card">
+                    <div class="results-header">
+                        <div>
+                            <h2 id="resultTitle" class="results-title">Itinerary</h2>
+                            <div id="resultMeta" class="results-meta"></div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary btn-small"
+                                onclick="saveCurrentItinerary('upcoming')">Save as Upcoming</button>
+                                <button class="btn btn-outline btn-small"
+                                onclick="saveCurrentItinerary('past')">Save as Past Trip</button>
+                        </div>
+                    </div>
+                    <div id="daysList"></div>
+                </div>
+            </div>
+        </section>
+        <section id="view-history" class="view-section">
+            <div class="page-header">
+                <h1 class="page-title">Trip Records</h1>
+                <p class="page-subtitle">
+                    Track upcoming tours, review past journeys, and store travel memory photos.
+                </p>
+            </div>
+            <div class="history-tabs">
+                <button class="tab-btn active" id="tabUpcomingBtn" onclick="switchTripTab('upcoming')">Upcoming Trips (<span id="upcomingCount">0</span>)</button>
+                <button class="tab-btn" id="tabPastBtn" onclick="switchTripTab('past')">Past Trips (<span id="pastCount">0</span>)</button>
+            </div>
+            <div id="tripsContainer"></div>
+            </section>
+    </main>
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-dialog">
+        <h2 class="modal-title">Sign In</h2>
+        <p class="modal-desc">
+            Enter your username and email address to manage your itineraries.
+        </p>
+        <form onsubmit="handleLogin(event)">
+            <div class="form-group mb-14">
+                <label for="username">Username</label>
+                <input type="text" id="username"
+                placeholder="Username" required/>
+            </div>
+            <div class="form-group mb-20">
+                <label for="email">Email Address</label>
+                <input type="email" id="email"
+                placeholder="name@domain.com" required/>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-outline" onclick="closeLoginModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Continue</button>
+            </div>
+        </form>
+    </div>
+</div>
+<footer>
+    <p>Yatra Gen - Formal Native JavaScript Storage& Archival System</p>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
