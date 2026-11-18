@@ -220,9 +220,13 @@ function switchTripTab(tabName) {
 
 function renderAuthUI() {
   const container = document.getElementById("authSection");
+
   if (currentUser) {
+    const username =
+      currentUser.user_metadata?.username || currentUser.email;
+
     container.innerHTML = `
-      <span>Signed in as <strong>${escapeHtml(currentUser.username)}</strong></span>
+      <span>Signed in as <strong>${escapeHtml(username)}</strong></span>
       <button class="btn btn-outline btn-small" onclick="handleLogout()">Sign Out</button>
     `;
   } else {
@@ -241,24 +245,41 @@ function closeLoginModal() {
 }
 
 async function handleLogin(event) {
-  event.preventDefault();
-  const username = document.getElementById("username").value.trim();
-  const email = document.getElementById("email").value.trim();
+    event.preventDefault();
 
-  if (!username || !email) return;
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
 
-  // Pure JavaScript Object
-  currentUser = { username: username, email: email, signedInAt: new Date() };
-  await dbSaveUser(currentUser);
+    if (!username || !email) return;
 
-  closeLoginModal();
-  renderAuthUI();
+    const { error } = await yatraSupabase.auth.signInWithOtp({
+        email: email,
+        options: {
+            emailRedirectTo: window.location.origin + window.location.pathname,
+            data: {
+                username: username
+            }
+        }
+    });
+
+    if (error) {
+        alert(error.message);
+        return;
+    }
+
+    alert("A login link has been sent to your email. Check your inbox!");
 }
 
 async function handleLogout() {
-  currentUser = null;
-  await dbClearUser();
-  renderAuthUI();
+    const { error } = await yatraSupabase.auth.signOut();
+
+    if (error) {
+        alert(error.message);
+        return;
+    }
+
+    currentUser = null;
+    renderAuthUI();
 }
 
 function handleGenerate(event) {
@@ -478,17 +499,33 @@ function escapeHtml(str) {
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     await initDatabase();
-    currentUser = await dbGetUser();
+
+    const { data: { session } } =
+      await yatraSupabase.auth.getSession();
+
+    currentUser = session ? session.user : null;
+
     allTrips = await dbGetAllTrips();
 
     renderAuthUI();
     updateTripCounters();
 
-   
     const destInput = document.getElementById("destination");
+
     if (destInput) {
       destInput.value = "Agartala";
     }
+
+    yatraSupabase.auth.onAuthStateChange((_event, session) => {
+      currentUser = session ? session.user : null;
+
+      renderAuthUI();
+
+      if (currentUser) {
+        closeLoginModal();
+      }
+    });
+
   } catch (err) {
     console.error("Initialization failure:", err);
   }
