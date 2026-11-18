@@ -111,22 +111,41 @@
         <p class="modal-desc">
             Enter your username and email address to manage your itineraries.
         </p>
-        <form onsubmit="handleLogin(event)">
-            <div class="form-group mb-14">
-                <label for="username">Username</label>
-                <input type="text" id="username"
-                placeholder="Username" required/>
-            </div>
-            <div class="form-group mb-20">
-                <label for="email">Email Address</label>
-                <input type="email" id="email"
-                placeholder="name@domain.com" required/>
-            </div>
-            <div class="modal-actions">
-                <button type="button" class="btn btn-outline" onclick="closeLoginModal()">Cancel</button>
-                <button type="submit" class="btn btn-primary">Continue</button>
-            </div>
-        </form>
+       <form onsubmit="handleLogin(event)">
+    <div class="form-group mb-14">
+        <label for="username">Username</label>
+        <input
+            type="text"
+            id="username"
+            placeholder="Username"
+            required
+        />
+    </div>
+
+    <div class="form-group mb-20">
+        <label for="email">Email Address</label>
+        <input
+            type="email"
+            id="email"
+            placeholder="name@domain.com"
+            required
+        />
+    </div>
+
+    <div class="modal-actions">
+        <button
+            type="button"
+            class="btn btn-outline"
+            onclick="closeLoginModal()"
+        >
+            Cancel
+        </button>
+
+        <button type="submit" class="btn btn-primary">
+            Send Login Link
+        </button>
+    </div>
+</form>
     </div>
 </div>
 <footer>
